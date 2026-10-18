@@ -1,0 +1,10 @@
+[package]
+name = "handl-lib-ws-frame"
+version = "0.1.0"
+edition = "2024"
+description = "ws_frame: WebSocket frame contract (RFC 6455 opcodes/types) — Handl stdlib port (ADR-0128 split)."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/handl-lang/lib-ws-frame"
+
+# Const-only: pure handl.
+[dependencies]
