@@ -88,7 +88,7 @@ export prefixes := (b) ~> while { i: 0, acc: [] } {
 export all_need_more := (decode: Decode, bs) ~> while { xs: bs, ok: true } {
   [xs, ok] ~> match xs {
     []: { out: ok },
-    [h, ...t]: { state: { xs: t, ok: ok && tag.tag_of(decode(h)) == "None" } }
+    [h, ...t]: { state: { xs: t, ok: ok && match decode(h) { Some(_): false, _: true } } }
   }
 }
 
