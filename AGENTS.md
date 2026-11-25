@@ -9,7 +9,7 @@ types. Pure `.hnl`.
 | --- | --- |
 | `src/index.hnl` | the contract — opcodes + codec types |
 | `pkg.hnl` | package manifest — `modules: ["ws_frame"]` |
-| `scripts/hnl-gate.sh`, `ci.sh` | the gate / bupha entry |
+| `scripts/hnl-gate.sh`, `workflows/gate.yaml` | the gate / bupha entry |
 
 ## Contract
 
