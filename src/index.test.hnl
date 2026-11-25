@@ -1,0 +1,42 @@
+--- ws_frame -- opcode constants and pure decode helpers.
+---
+--- The codec arrows (`Encode`/`Decode`) are contract signatures
+--- implemented by `ws-frame-handl`/native backends; this suite covers
+--- what the contract repo itself ships: the RFC 6455 opcode constants
+--- and the pure projections/combinators.
+
+from "./index" import * as m
+
+-- RFC 6455 §5.2 opcode registry
+test_op_text := assert m.OpText == 1
+
+test_op_binary := assert m.OpBinary == 2
+
+test_op_close := assert m.OpClose == 8
+
+test_op_ping := assert m.OpPing == 9
+
+test_op_pong := assert m.OpPong == 10
+
+test_op_continuation := assert m.OpContinuation == 0
+
+-- frame_in projects the wire-visible fields off an EncodeIn record
+test_frame_in := assert m.frame_in(
+  { fin: 1, op: 1, payload: "hi", mask_key: "k" })
+  == { fin: 1, op: 1, payload: "hi" }
+
+-- frame_of / rest_of project a `Some` decode result
+test_frame_of := assert m.frame_of(
+  { value: { frame: { fin: 1, op: 1, payload: "x" }, rest: "r" } }
+).op == 1
+
+test_rest_of := assert m.rest_of(
+  { value: { frame: { fin: 1, op: 1, payload: "x" }, rest: "r" } }
+) == "r"
+
+-- empty ignores its argument and yields the empty buffer
+test_empty := assert m.empty(0) == bytes.from_list([])
+
+-- prefixes enumerates every strict prefix, shortest first
+test_prefixes := assert m.prefixes(bytes.from_list([1, 2, 3]))
+  == [bytes.from_list([]), bytes.from_list([1]), bytes.from_list([1, 2])]
