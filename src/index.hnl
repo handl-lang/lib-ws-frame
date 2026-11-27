@@ -45,8 +45,8 @@ export Encode := (input: EncodeIn) ~> Bytes
 --- round-trip through the formatter in generic-argument position).
 export DecodeOut := { frame: Frame, rest: Bytes }
 
---- decode -- read one frame off the front of a buffer. `None` means the
---- buffer holds only a strict prefix (need more bytes); `Some` returns
+--- decode -- read one frame off the front of a buffer. `none` means the
+--- buffer holds only a strict prefix (need more bytes); `some` returns
 --- the frame and the unconsumed `rest`.
 export Decode := (Bytes) ~> Option<DecodeOut>
 
@@ -62,10 +62,10 @@ export OpPong := 10
 --- encode-only; it does not survive a decode round-trip).
 export frame_in := (r) ~> ({ fin: r.fin, op: r.op, payload: r.payload })
 
---- frame_of -- project the frame out of a `Some` decode result.
+--- frame_of -- project the frame out of a `some` decode result.
 export frame_of := (o) ~> o.value.frame
 
---- rest_of -- project the unconsumed tail out of a `Some` decode
+--- rest_of -- project the unconsumed tail out of a `some` decode
 --- result.
 export rest_of := (o) ~> o.value.rest
 
@@ -84,11 +84,11 @@ export prefixes := (b) ~> while { i: 0, acc: [] } {
 }
 
 --- all_need_more -- decode every buffer in `bs`; `true` when each one
---- comes back `None`.
+--- comes back `none`.
 export all_need_more := (decode: Decode, bs) ~> while { xs: bs, ok: true } {
   [xs, ok] ~> match xs {
     []: { out: ok },
-    [h, ...t]: { state: { xs: t, ok: ok && match decode(h) { Some(_): false, _: true } } }
+    [h, ...t]: { state: { xs: t, ok: ok && match decode(h) { some(_): false, _: true } } }
   }
 }
 
