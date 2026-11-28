@@ -60,14 +60,23 @@ export OpPong := 10
 
 --- frame_in -- the `Frame` an `Encode` input describes (`mask_key` is
 --- encode-only; it does not survive a decode round-trip).
-export frame_in := (r) ~> ({ fin: r.fin, op: r.op, payload: r.payload })
+export frame_in := (r) ~> do {
+  x := (r : EncodeIn)
+  { fin: x.fin, op: x.op, payload: x.payload }
+}
 
 --- frame_of -- project the frame out of a `some` decode result.
-export frame_of := (o) ~> o.value.frame
+export frame_of := (o) ~> do {
+  v := ((o : { value: DecodeOut }).value)
+  v.frame
+}
 
 --- rest_of -- project the unconsumed tail out of a `some` decode
 --- result.
-export rest_of := (o) ~> o.value.rest
+export rest_of := (o) ~> do {
+  v := ((o : { value: DecodeOut }).value)
+  v.rest
+}
 
 --- empty -- the constantly-empty-buffer arrow, named so `complete` can
 --- mention it.
